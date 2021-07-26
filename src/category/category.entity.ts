@@ -4,5 +4,5 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class CategoryEntity {
   @PrimaryGeneratedColumn() id: number;
   @Column() categoryName: string;
-  @Column() parentCatId: number;
+  @Column() parentCatId: number | null;
 }
