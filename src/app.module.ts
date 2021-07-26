@@ -6,6 +6,7 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { PhotoModule } from './photo/photo.module';
 @Module({
   imports: [
     ProductModule,
@@ -14,7 +15,7 @@ import { UserModule } from './user/user.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'secret',
+      password: '123@123',
       database: 'nestjs',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
@@ -22,6 +23,7 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     AuthModule,
     UserModule,
+    PhotoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
