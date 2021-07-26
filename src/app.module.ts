@@ -6,7 +6,6 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { PhotoModule } from './photo/photo.module';
 @Module({
   imports: [
     ProductModule,
@@ -17,13 +16,12 @@ import { PhotoModule } from './photo/photo.module';
       username: 'root',
       password: '123@123',
       database: 'nestjs',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
       synchronize: true,
     }),
     CategoryModule,
     AuthModule,
     UserModule,
-    PhotoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
