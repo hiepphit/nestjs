@@ -1,10 +1,10 @@
-FROM amd64/mysql:5.7 AS mydb
 FROM node:12.19.0-alpine3.9 AS development
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-
+RUN apt-get update
+RUN apt-get install -y curl 
 RUN npm install glob rimraf
 
 RUN npm install --only=development

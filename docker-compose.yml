@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
     db:
-        image: amd64/mysql:5.7
+        image: mysql:5.7
         restart: always
         container_name: db-mysql
         ports:
@@ -16,6 +16,8 @@ services:
             MYSQL_PASSWORD: testpassword
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3306"]
     dev:
         container_name: nestjs_api_dev
         image: nestjs-api-dev:1.0.0
@@ -33,7 +35,9 @@ services:
             - .:/usr/src/app
             - /usr/src/app/node_modules
         restart: unless-stopped
-        depends_on: [db]
+        depends_on: 
+            db:
+                condition: service_started
     prod:
         container_name: nestjs_api_prod
         image: nestjs-api-prod:1.0.0
