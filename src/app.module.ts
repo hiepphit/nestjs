@@ -9,16 +9,7 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ProductModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123@123',
-      database: 'nestjs',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(),
     CategoryModule,
     AuthModule,
     UserModule,
