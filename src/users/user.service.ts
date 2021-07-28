@@ -15,12 +15,12 @@ export class UsersService {
     private readonly usersRepo: Repository<UserEntity>,
   ) {}
 
-  async findOne(username: string): Promise<UserEntity> {
-    const user = await this.usersRepo.findOne({
-      where: { username: username },
-    });
-    if (!user) throw new NotFoundException('User not contain');
-    return user;
+  async findOne(email: string): Promise<UserEntity> {
+    return await this.usersRepo
+      .createQueryBuilder('users')
+      .where({ email })
+      .addSelect('users.password')
+      .getOne();
   }
   async getOne(id: number): Promise<UserEntity> {
     const user = await this.usersRepo.findOne(id);
