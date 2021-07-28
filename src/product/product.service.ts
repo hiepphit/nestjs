@@ -1,4 +1,4 @@
-import { ProductEntity } from './product.entity';
+import { ProductEntity } from './entities/product.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -22,6 +22,12 @@ export class ProductService {
   async create(dto: CreateProductDto): Promise<any> {
     const product = await this.productRepo.create(dto);
     return await this.productRepo.save(product);
+  }
+  async edit(id: number, dto: EditProductDto) {
+    const product = await this.productRepo.findOne(id);
+    if (!product) throw new NotFoundException(`Product ${id} not exist`);
+    const edited = Object.assign(product, dto);
+    return await this.productRepo.save(edited);
   }
   async update(id: number, dto: EditProductDto): Promise<any> {
     const product = await this.productRepo.findOne(id);
