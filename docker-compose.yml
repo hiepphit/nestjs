@@ -15,8 +15,6 @@ services:
             MYSQL_PASSWORD: testpassword
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:3306"]
     dev:
         container_name: nestjs_api_dev
         image: nestjs-api-dev:1.0.0

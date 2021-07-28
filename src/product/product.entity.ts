@@ -1,13 +1,18 @@
-import { CategoryEntity } from './../category/category.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('product')
 export class ProductEntity {
   @PrimaryGeneratedColumn() id: number;
-  @Column({ length: 50 }) name: string;
-  @ManyToOne(() => CategoryEntity, (cat) => cat.id)
-  catId: number;
-  @Column('text') description: string;
+  @Column({ type: 'varchar', length: 50 }) name!: string;
+  @Column({ type: 'simple-array' }) catIds: string[];
+  @Column({ type: 'varchar', length: 150 }) description?: string;
   @Column() quantity: number;
   @Column() price: number;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
 }
