@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs';
+import { type } from 'os';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -21,6 +22,9 @@ export class UserEntity {
 
   @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   password: string;
+
+  @Column({ type: 'simple-array' })
+  roles: string[];
 
   @Column({ type: 'bool', default: true })
   status: boolean;

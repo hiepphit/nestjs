@@ -22,8 +22,12 @@ export class UsersService {
       .addSelect('users.password')
       .getOne();
   }
-  async getOne(id: number): Promise<UserEntity> {
-    const user = await this.usersRepo.findOne(id);
+  async getOne(id: number, userEntity?: UserEntity): Promise<UserEntity> {
+    const user = await this.usersRepo
+      .findOne(id)
+      .then((u) =>
+        !userEntity ? u : !!u && userEntity.id === u.id ? u : null,
+      );
     if (!user) throw new NotFoundException('User not contain');
     return user;
   }
@@ -46,13 +50,14 @@ export class UsersService {
     return user;
   }
 
-  async editOne(id: number, dto: EditUserDto) {
-    const user = await this.getOne(id);
+  async editOne(id: number, dto: EditUserDto, userEntity?: UserEntity) {
+    const user = await this.getOne(id, userEntity);
     if (!user) throw new NotFoundException('Can not find user');
     return await this.usersRepo.update(id, dto);
   }
 
-  async deleteOne(id: number) {
-    return await this.usersRepo.delete(id);
+  async deleteOne(id: number, userEntity?: UserEntity) {
+    const user = await this.getOne(id, userEntity);
+    return await this.usersRepo.delete(user);
   }
 }
