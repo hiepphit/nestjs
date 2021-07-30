@@ -7,9 +7,8 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  catIds: string[];
+  @IsNumber()
+  catId: number;
 
   @IsNumber()
   quantity: number;

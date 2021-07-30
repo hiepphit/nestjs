@@ -19,6 +19,17 @@ export class ProductService {
   async findAll(): Promise<ProductEntity[]> {
     return await this.productRepo.find();
   }
+  async findByCatId(id: number): Promise<ProductEntity[]> {
+    // const products = await this.productRepo
+    //   .createQueryBuilder('product')
+    //   .leftJoinAndSelect('product.catId', 'categories')
+    //   .where('product.cat_id = :id', { id })
+    //   .getMany();
+    const products = await this.productRepo.find({
+      catId: id,
+    });
+    return products;
+  }
   async create(dto: CreateProductDto): Promise<any> {
     const product = await this.productRepo.create(dto);
     return await this.productRepo.save(product);

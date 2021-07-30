@@ -4,11 +4,14 @@ import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
+import { RelationCategory } from './entities/relation-category.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category) private readonly catRepo: Repository<Category>,
+    @InjectRepository(Category)
+    private readonly catRelRepo: Repository<RelationCategory>,
   ) {}
   async create(createCategoryDto: CreateCategoryDto) {
     const cat = await this.catRepo.create(createCategoryDto);
@@ -16,7 +19,11 @@ export class CategoryService {
   }
 
   async findAll() {
-    return await this.catRepo.find();
+    const data = await this.catRepo
+      .createQueryBuilder('categories')
+      .innerJoinAndSelect('categories.subCategories', 'relation_categories')
+      .getMany();
+    return data;
   }
 
   async findOne(id: number) {

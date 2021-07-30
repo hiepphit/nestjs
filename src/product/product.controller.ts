@@ -1,4 +1,3 @@
-import { ProductEntity } from './entities/product.entity';
 import { ProductService } from './product.service';
 import {
   Body,
@@ -23,6 +22,15 @@ export class ProductController {
     return {
       message: 'Successfully',
       data,
+    };
+  }
+  @Get('/by-category/:id')
+  async findByCat(@Param() params) {
+    const data = await this.productService.findByCatId(params.id);
+    return {
+      message: 'Successfully',
+      data,
+      category: +params.id,
     };
   }
   @Get(':id')
