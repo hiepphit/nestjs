@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiQuery, ApiTags, ApiProperty } from '@nestjs/swagger';
 import { ProductService } from './product/product.service';
+import { Paginate } from './common/decorators';
 
 @ApiTags('APP Module')
 @Controller()
@@ -11,14 +12,10 @@ export class AppController {
     private readonly prodService: ProductService,
   ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Get('all-product')
-  async getAllProd() {
-    const data = await this.appService.getAllProd();
+  @Paginate()
+  async getAllProd(@Query('page') page: number, @Query('limit') limit: number) {
+    const data = await this.appService.getAllProd(page, limit);
     return {
       message: 'Successfully',
       data,

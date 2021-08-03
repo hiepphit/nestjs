@@ -1,3 +1,5 @@
+import { ProductDto } from './dtos/product.dto';
+import { PaginatedDto } from './../common/dtos/paginated.dto';
 import { ProductEntity } from './entities/product.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,19 +18,33 @@ export class ProductService {
     if (!product) throw new NotFoundException();
     return product;
   }
-  async findAll(): Promise<ProductEntity[]> {
-    return await this.productRepo.find();
+  async findAll(page: number, take: number): Promise<PaginatedDto<ProductDto>> {
+    const data = await this.productRepo.findAndCount({
+      take,
+      skip: take * (page - 1),
+    });
+    const edges = data[0];
+    const totalCount = data[1];
+    const totalPage = Math.ceil(totalCount / take);
+    // if (page > totalPage) return new NotFoundException('Error param page');
+    return { edges, totalCount, totalPage, page };
   }
-  async findByCatId(id: number): Promise<ProductEntity[]> {
+  async findByCatId(id: number, page: number, take: number): Promise<any> {
     // const products = await this.productRepo
     //   .createQueryBuilder('product')
     //   .leftJoinAndSelect('product.catId', 'categories')
     //   .where('product.cat_id = :id', { id })
     //   .getMany();
-    const products = await this.productRepo.find({
-      catId: id,
+    const data = await this.productRepo.findAndCount({
+      where: { catId: id },
+      take,
+      skip: take * (page - 1),
     });
-    return products;
+    const edges = data[0];
+    const totalCount = data[1];
+    const totalPage = Math.ceil(totalCount / take);
+    // if (page > totalPage) return new NotFoundException('Error param page');
+    return { edges, totalCount, totalPage, page };
   }
   async create(dto: CreateProductDto): Promise<any> {
     const product = await this.productRepo.create(dto);

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Category } from 'src/category/entities/category.entity';
 import {
   Column,
@@ -12,7 +13,9 @@ import {
 @Entity('product')
 export class ProductEntity {
   @PrimaryGeneratedColumn() id: number;
-  @Column({ type: 'varchar', length: 50, nullable: false }) name!: string;
+  @ApiProperty({ name: 'name', default: 'Thit ga cac loai' })
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  name!: string;
   @Column({ type: 'varchar', length: 150, nullable: true })
   description?: string;
   @Column() quantity: number;

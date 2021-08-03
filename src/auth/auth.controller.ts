@@ -1,3 +1,4 @@
+import { UserEntity } from './../users/entities/user.entity';
 import {
   Controller,
   Get,
@@ -6,12 +7,14 @@ import {
   Request,
   Body,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dtos/login-suth.dto';
 import { LocalAuthGuard } from './guards';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Type } from 'class-transformer';
+import { json } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')

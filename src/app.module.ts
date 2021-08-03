@@ -30,7 +30,7 @@ import databaseConfig from './config/database.config';
     CategoryModule,
     ProductModule,
     UsersModule,
-    CartModule,
+    // CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],

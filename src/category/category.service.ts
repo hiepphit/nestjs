@@ -10,7 +10,7 @@ import { RelationCategory } from './entities/relation-category.entity';
 export class CategoryService {
   constructor(
     @InjectRepository(Category) private readonly catRepo: Repository<Category>,
-    @InjectRepository(Category)
+    @InjectRepository(RelationCategory)
     private readonly catRelRepo: Repository<RelationCategory>,
   ) {}
   async create(createCategoryDto: CreateCategoryDto) {
@@ -18,12 +18,16 @@ export class CategoryService {
     return await this.catRepo.save(cat);
   }
 
-  async findAll() {
-    const data = await this.catRepo
-      .createQueryBuilder('categories')
-      .innerJoinAndSelect('categories.subCategories', 'relation_categories')
-      .getMany();
-    return data;
+  async findAll(page: number, take: number) {
+    const data = await this.catRepo.findAndCount({
+      take,
+      skip: take * (page - 1),
+    });
+    const edges = data[0];
+    const totalCount = data[1];
+    const totalPage = Math.ceil(totalCount / take);
+    // if (page > totalPage) return new NotFoundException('Error param page');
+    return { edges, totalCount, totalPage, page };
   }
 
   async findOne(id: number) {

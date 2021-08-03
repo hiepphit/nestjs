@@ -1,3 +1,4 @@
+import { resultArray } from './../common/utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import {
@@ -7,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreateUserDto, EditUserDto } from './dto';
+import { PaginatedDto } from 'src/common/dtos/paginated.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +34,15 @@ export class UsersService {
     return user;
   }
 
-  async getMany() {
-    return await this.usersRepo.find();
+  async getMany(
+    page: number,
+    limit: number,
+  ): Promise<PaginatedDto<UserEntity>> {
+    const data = await this.usersRepo.findAndCount({
+      take: +limit,
+      skip: limit * (page - 1),
+    });
+    return resultArray(data, limit, page);
   }
 
   async createOne(dto: CreateUserDto) {

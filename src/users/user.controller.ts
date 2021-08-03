@@ -1,3 +1,4 @@
+import { PaginatedDto } from './../common/dtos/paginated.dto';
 import {
   Body,
   Controller,
@@ -6,11 +7,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags, ApiProperty } from '@nestjs/swagger';
 import { InjectRolesBuilder, RolesBuilder } from 'nest-access-control';
 import { AppResources, AppRoles } from 'src/app.roles';
-import { User, Auth } from 'src/common/decorators';
+import { User, Auth, Paginate } from 'src/common/decorators';
 import { CreateUserDto, EditUserDto, UserRegistrationDto } from './dto';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './user.service';
@@ -22,12 +24,17 @@ export class UserController {
     private readonly userService: UsersService,
     @InjectRolesBuilder() private readonly roleBuilder: RolesBuilder,
   ) {}
+  @Paginate()
   @Get()
-  async getMany() {
-    const data = await this.userService.getMany();
-    return { data };
+  async getMany(
+    @Query() page: number,
+    @Query() limit: number,
+  ): Promise<PaginatedDto<UserEntity>> {
+    const data = await this.userService.getMany(page, limit);
+    return data;
   }
 
+  @ApiParam({ name: 'id', type: 'number' })
   @Get(':id')
   async getOne(@Param() id: number) {
     const data = await this.userService.getOne(id);
